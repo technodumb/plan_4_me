@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:plan_4_me/model/message_model.dart';
@@ -120,7 +119,7 @@ class AddPlanScreen extends StatelessWidget {
                                     initialTime: TimeOfDay.now(),
                                   ) ??
                                   TimeOfDay.now();
-                              addPlanController.setTime(selectedTime, context);
+                              addPlanController.setTime(selectedTime);
                             },
                             style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero, minimumSize: Size.zero
@@ -300,7 +299,9 @@ class AddPlanScreen extends StatelessWidget {
                             try {
                               // await addPlanController.addingPlan();
                               // add a spinnning circle till the response is back
-                              await addPlanController.addingPlan();
+                              if (!addPlanController.gotQuestions) {
+                                await addPlanController.addingPlan();
+                              }
                             } catch (e) {
                               // print(e);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -312,7 +313,7 @@ class AddPlanScreen extends StatelessWidget {
                             }
                             int status =
                                 addPlanController.addPlanResponse.statusCode;
-                            if (status == 404) {
+                            if (status != 200) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Something went wrong'),
@@ -321,6 +322,9 @@ class AddPlanScreen extends StatelessWidget {
                               return;
                             }
                             //  chatScreenController context.read
+                            addPlanController.gotQuestions = true;
+                            chatScreenProvider.questionList.clear();
+                            chatScreenProvider.answerList.clear();
                             chatScreenProvider.questionList = List<String>.from(
                                 jsonDecode(addPlanController.addPlanResponse
                                     .body)['questions'] as List);
@@ -346,7 +350,7 @@ class AddPlanScreen extends StatelessWidget {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               // color: const Color(0xFF191919),
-                              gradient: LinearGradient(colors: [
+                              gradient: const LinearGradient(colors: [
                                 Color(0xFF277613),
                                 Color(0x00000000)
                               ]),
@@ -354,7 +358,7 @@ class AddPlanScreen extends StatelessWidget {
                                   Border.all(color: const Color(0xFF595959)),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Proceed',
                               style:
                                   TextStyle(fontSize: 24, color: Colors.white),

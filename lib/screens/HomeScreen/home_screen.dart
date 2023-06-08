@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:plan_4_me/model/plan_model.dart';
+import 'package:plan_4_me/model/subplan_model.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -120,25 +121,24 @@ class HomeScreen extends StatelessWidget {
                               planTime: '12:00 PM',
                               planID: '1234567890',
                               subPlans: [
-                                PlanModel(
-                                  planID: '123',
-                                  planName: 'Botanical Garden',
-                                  planDescription:
+                                SubplanModel(
+                                  subplanIndex: '1',
+                                  subplanTitle: 'Botanical Garden',
+                                  subplanDescription:
                                       'visit botanical garden at night',
-                                  planDate: '12/12/2023',
-                                  planTime: '8:00 PM',
+                                  subplanDate: '12/12/2023',
+                                  subplanTime: '8:00 PM', isCompleted: false,
                                   // subPlans: ,
-                                  isHighPriority: true,
+                                  // isHighPriority: true,
                                 ),
-                                PlanModel(
-                                  planID: '234',
-                                  planName: 'Mountain Hiking',
-                                  planDescription:
+                                SubplanModel(
+                                  subplanIndex: '2',
+                                  subplanTitle: 'Mountain Hiking',
+                                  subplanDescription:
                                       'Hike the mountain early morning',
-                                  planDate: '13/12/2023',
-                                  planTime: '6:00 AM',
+                                  subplanDate: '13/12/2023',
+                                  subplanTime: '6:00 AM',
                                   // subPlans: ,
-                                  isHighPriority: true,
                                 ),
                               ],
                               // time: '12:00',
@@ -191,7 +191,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
-                  backgroundColor: Color(0xFFD9D9D9),
+                  backgroundColor: const Color(0xFFD9D9D9),
                   foregroundColor: Colors.black,
                   onPressed: () {
                     // context.read<AddPlanProvider>().titleController.text =
@@ -297,8 +297,8 @@ class PlanBoxButton extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            e.planName,
-                            style: TextStyle(
+                            e.subplanTitle,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.w300,

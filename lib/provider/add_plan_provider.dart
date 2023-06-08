@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:plan_4_me/model/plan_model.dart';
@@ -12,6 +11,7 @@ class AddPlanProvider extends ChangeNotifier {
   TextEditingController descriptionController = TextEditingController();
 
   bool _highPriority = false;
+  bool gotQuestions = false;
   DateTime _pickedDate = DateTime.now();
   TimeOfDay _pickedTime = TimeOfDay.now();
 
@@ -33,9 +33,10 @@ class AddPlanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTime(TimeOfDay time, BuildContext context) {
+  void setTime(TimeOfDay time) {
     _pickedTime = time;
-    final localizations = MaterialLocalizations.of(context);
+    // final localizations = MaterialLocalizations.of(context);
+    const localizations = DefaultMaterialLocalizations();
     // final formattedTimeOfDay =
     timeController.text = localizations.formatTimeOfDay(_pickedTime);
     notifyListeners();

@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:plan_4_me/model/message_model.dart';
 import 'package:plan_4_me/provider/add_plan_provider.dart';
 import 'package:plan_4_me/provider/chat_screen_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class PlanChatScreen extends StatelessWidget {
   const PlanChatScreen({super.key});
@@ -132,23 +132,34 @@ class PlanChatScreen extends StatelessWidget {
                             .textFieldController.text.isEmpty) {
                           return;
                         }
-                        chatScreenProvider.addToAnswerList()
+                        chatScreenProvider.addToAnswerList();
                         chatScreenProvider.addMessage(
                           MessageModel(
                             message:
                                 chatScreenProvider.textFieldController.text,
                             sent: true,
-                            planID: '1',
+                            planID: addPlanProvider.planModel.planID,
                           ),
                         );
                         chatScreenProvider.textFieldController.clear();
                         // sleep for 1 second
-                        await Future.delayed(Duration(seconds: 1));
+                        await Future.delayed(const Duration(seconds: 1));
                         if (chatScreenProvider.questionIndex < 10) {
                           chatScreenProvider.addMessage(
                             MessageModel(
                               message: chatScreenProvider.questionList[
                                   chatScreenProvider.questionIndex++],
+                              sent: false,
+                              planID: addPlanProvider.planModel.planID,
+                            ),
+                          );
+                        } else {
+                          http.Response s =
+                              await chatScreenProvider.recieveSummaryViaPOST();
+                          print(s.body);
+                          chatScreenProvider.addMessage(
+                            MessageModel(
+                              message: 'Thank you for your time',
                               sent: false,
                               planID: addPlanProvider.planModel.planID,
                             ),

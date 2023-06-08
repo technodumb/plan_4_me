@@ -1,4 +1,5 @@
-import 'package:plan_4_me/model/message_model.dart';
+import 'message_model.dart';
+import 'subplan_model.dart';
 
 class PlanModel {
   String planID;
@@ -6,10 +7,11 @@ class PlanModel {
   String planDescription;
   String planDate;
   String planTime;
-  List<PlanModel> subPlans;
+  List<SubplanModel> subPlans;
   bool isHighPriority;
   List<String> suggestions;
   List<MessageModel> messageList;
+  bool isCompleted;
 
   PlanModel({
     required this.planID,
@@ -23,6 +25,7 @@ class PlanModel {
     this.subPlans = const [],
     this.suggestions = const [],
     required this.isHighPriority,
+    this.isCompleted = false,
   });
 
   PlanModel.fromJson(Map<String, dynamic> json)
@@ -34,7 +37,8 @@ class PlanModel {
         messageList = json['messageList'],
         isHighPriority = json['isHighPriority'],
         subPlans = json['subPlans'],
-        suggestions = json['suggestions'];
+        suggestions = json['suggestions'],
+        isCompleted = json['isCompleted'];
 
   Map<String, dynamic> toJson() => {
         'planID': planID,
@@ -46,6 +50,7 @@ class PlanModel {
         'isHighPriority': isHighPriority,
         'subPlans': subPlans,
         'suggestions': suggestions,
+        'isCompleted': isCompleted,
       };
 
   factory PlanModel.newPlan() {
@@ -55,10 +60,7 @@ class PlanModel {
       planDescription: '',
       planDate: '',
       planTime: '',
-      messageList: [],
       isHighPriority: false,
-      subPlans: [],
-      suggestions: [],
     );
   }
 }
