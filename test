@@ -1,0 +1,22 @@
+db design
+
+Users - name
+        gmail - integrate with calendar
+        username - password
+        image (maybe)
+
+        List of Plans
+
+Plans - name
+        description
+        date
+        time
+        superplan
+  
+        List of Subplans <Plans>
+        List of Chat
+        List of Suggestions <Strings>
+
+Chat - message
+       user
+       time
