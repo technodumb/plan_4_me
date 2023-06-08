@@ -11,7 +11,7 @@ class ChatScreenProvider extends ChangeNotifier {
   void initPage() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+          duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
     });
     // questionIndex++;
   }
@@ -33,8 +33,15 @@ class ChatScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> get questionList => _questionList;
+
   set questionList(List<String> questionList) {
     _questionList.addAll(questionList);
+    notifyListeners();
+  }
+
+  void addToAnswerList() {
+    _answerList.add(_textFieldController.text);
     notifyListeners();
   }
 }

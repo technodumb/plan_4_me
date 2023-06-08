@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:plan_4_me/model/message_model.dart';
 import 'package:plan_4_me/provider/add_plan_provider.dart';
 import 'package:plan_4_me/provider/chat_screen_provider.dart';
 import 'package:plan_4_me/screens/PlanChatScreen/plan_chat_screen.dart';
@@ -285,67 +286,82 @@ class AddPlanScreen extends StatelessWidget {
                         ],
                       ),
                       Spacer(),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        onPressed: () async {
-                          // print((await addPlanController.sendPostReq()).body);
-                          try {
-                            // await addPlanController.addingPlan();
-                            // add a spinnning circle till the response is back
-                            await addPlanController.addingPlan();
-                          } catch (e) {
-                            // print(e);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Cannot connect to the server'),
-                              ),
-                            );
-                            return;
-                          }
-                          int status =
-                              addPlanController.addPlanResponse.statusCode;
-                          if (status == 404) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Something went wrong'),
-                              ),
-                            );
-                            return;
-                          }
-                          //  chatScreenController context.read
-                          context.read<ChatScreenProvider>().questionList =
-                              jsonDecode(addPlanController
-                                  .addPlanResponse.body)['questions'];
-                          context.read<ChatScreenProvider>().questionIndex = 0;
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PlanChatScreen(),
+                      Consumer<ChatScreenProvider>(
+                          builder: (context, chatScreenProvider, child) {
+                        return TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            // color: const Color(0xFF191919),
-                            gradient: LinearGradient(
-                                colors: [Color(0xFF277613), Color(0x00000000)]),
-                            border: Border.all(color: const Color(0xFF595959)),
-                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text(
-                            'Proceed',
-                            style: TextStyle(fontSize: 24, color: Colors.white),
+                          onPressed: () async {
+                            // print((await addPlanController.sendPostReq()).body);
+                            try {
+                              // await addPlanController.addingPlan();
+                              // add a spinnning circle till the response is back
+                              await addPlanController.addingPlan();
+                            } catch (e) {
+                              // print(e);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Cannot connect to the server'),
+                                ),
+                              );
+                              return;
+                            }
+                            int status =
+                                addPlanController.addPlanResponse.statusCode;
+                            if (status == 404) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Something went wrong'),
+                                ),
+                              );
+                              return;
+                            }
+                            //  chatScreenController context.read
+                            chatScreenProvider.questionList = List<String>.from(
+                                jsonDecode(addPlanController.addPlanResponse
+                                    .body)['questions'] as List);
+                            chatScreenProvider.questionIndex = 1;
+                            chatScreenProvider.messages.clear();
+                            chatScreenProvider.messages.add(
+                              MessageModel(
+                                message: chatScreenProvider.questionList[0],
+                                sent: false,
+                                planID: addPlanController.planModel.planID,
+                              ),
+                            );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PlanChatScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              // color: const Color(0xFF191919),
+                              gradient: LinearGradient(colors: [
+                                Color(0xFF277613),
+                                Color(0x00000000)
+                              ]),
+                              border:
+                                  Border.all(color: const Color(0xFF595959)),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Proceed',
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.white),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       SizedBox(
                         height: 20,
                       )

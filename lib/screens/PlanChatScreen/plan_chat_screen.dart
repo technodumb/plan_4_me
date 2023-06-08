@@ -125,13 +125,14 @@ class PlanChatScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     IconButton(
                       onPressed: () async {
                         if (chatScreenProvider
                             .textFieldController.text.isEmpty) {
                           return;
                         }
+                        chatScreenProvider.addToAnswerList()
                         chatScreenProvider.addMessage(
                           MessageModel(
                             message:
@@ -143,13 +144,16 @@ class PlanChatScreen extends StatelessWidget {
                         chatScreenProvider.textFieldController.clear();
                         // sleep for 1 second
                         await Future.delayed(Duration(seconds: 1));
-                        chatScreenProvider.addMessage(
-                          MessageModel(
-                            message: "Your message has been recieved",
-                            sent: false,
-                            planID: '1',
-                          ),
-                        );
+                        if (chatScreenProvider.questionIndex < 10) {
+                          chatScreenProvider.addMessage(
+                            MessageModel(
+                              message: chatScreenProvider.questionList[
+                                  chatScreenProvider.questionIndex++],
+                              sent: false,
+                              planID: addPlanProvider.planModel.planID,
+                            ),
+                          );
+                        }
                       },
                       icon: const Icon(
                         Icons.send,
